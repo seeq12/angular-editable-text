@@ -1,32 +1,40 @@
+.gg-editable-text:hover {
+  border: solid #666 1px;
+}
 
 .gg-editable-text .original-text{
-    border:1px solid transparent;
+  border:1px solid #666;
+  text-decoration: inherit;
+  padding: 2px;
 }
-.gg-editable-text .original-text:hover, .gg-editable-text.editing {
-    border:dashed #ccc 1px;
+.gg-editable-text .original-text:hover {
+  border: solid #666 1px;
+}
+.gg-editable-text.editing {
+  border: solid #999 1px;
 }
 .gg-editable-text input{
-    border:dashed #ccc 1px;
+  border: solid #ccc 1px;
 }
 .gg-editable-text textarea:focus, .gg-editable-text input:focus{
-    outline: 0;
+  outline: 0;
 }
 
 .gg-editable-text textarea,.gg-editable-text input{
-    background: inherit;
-    color: inherit;
-    font: inherit;
-    border: inherit;
-    width: 100%;
-    padding: inherit;
-    margin: 0;
-    height:inherit;
-    -webkit-font-smoothing: inherit;
-    line-height:inherit;
-    display:inline-block;
-    text-decoration: inherit;
+  background: inherit;
+  color: inherit;
+  font: inherit;
+  border: inherit;
+  width: 100%;
+  padding: inherit;
+  margin: 0;
+  height:inherit;
+  -webkit-font-smoothing: inherit;
+  line-height:inherit;
+  display:inline-block;
+  text-decoration: inherit;
 }
 
 .gg-editable-text span{
-    text-decoration: inherit;
+  text-decoration: inherit;
 }
