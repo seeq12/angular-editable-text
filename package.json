@@ -1,7 +1,9 @@
 {
   "name": "angular-editable-text",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "angular-elastic-input": "^2.2.0"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-autoprefixer": "~0.4.0",
