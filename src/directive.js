@@ -5,7 +5,7 @@
 (function() {
   'use strict';
   angular.module('gg.editableText', ['puElasticInput'])
-    .directive('editableText', ['$timeout', 'EditableTextHelper', function ($timeout, EditableTextHelper) {
+    .directive('editableText', ['EditableTextHelper', function(EditableTextHelper) {
       return {
         scope: {
           editableText: '=',
@@ -19,7 +19,7 @@
           '<span ng-hide="isEditing" ng-transclude></span>' +
           '<span ng-show="isWorking" class="' + EditableTextHelper.workingClassName + '">' + EditableTextHelper.workingText + '</span>' +
           '</span>',
-        link: function (scope, elem, attrs) {
+        link: function(scope, elem, attrs) {
           var input = elem.find('input');
           var lastValue;
 
@@ -32,11 +32,14 @@
           scope.spanClick = function(e) {
             console.log(e);
             scope.isEditing = true;
-          }
+          };
 
           scope.onInputClick = function() {
             scope.isEditing = true;
-          }
+            if (attrs.hasOwnProperty('selectAll')) {
+              input.select();
+            }
+          };
 
           scope.onKeyPress = function(e) {
             console.log(e);
@@ -45,9 +48,9 @@
               $(inputElem).blur();
               return;
             }
-          }
+          };
 
-          scope.$watch('isEditing', function (val, oldVal) {
+          scope.$watch('isEditing', function(val, oldVal) {
             var editPromise, inputElm = input[0];
             if (attrs.editMode !== undefined) {
               scope.editMode = val;
@@ -88,8 +91,7 @@
             lastValue = newVal;
             scope.editingValue = newVal;
           });
-        }
+        },
       };
-    }]);
+    },]);
 })();
-

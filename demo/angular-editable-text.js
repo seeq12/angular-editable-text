@@ -19,8 +19,12 @@
     .directive('editableText', ['EditableTextHelper', function(EditableTextHelper) {
 =======
   angular.module('gg.editableText', ['puElasticInput'])
+<<<<<<< HEAD
     .directive('editableText', ['$timeout', 'EditableTextHelper', function ($timeout, EditableTextHelper) {
 >>>>>>> Added dependency on elastic input
+=======
+    .directive('editableText', ['EditableTextHelper', function(EditableTextHelper) {
+>>>>>>> Added 'selectAll' attribute, to automatically select the contents of the input when editing starts
       return {
         scope: {
           editableText: '=',
@@ -43,8 +47,12 @@
           '<span ng-hide="isEditing" ng-transclude></span>' +
           '<span ng-show="isWorking" class="' + EditableTextHelper.workingClassName + '">' + EditableTextHelper.workingText + '</span>' +
           '</span>',
+<<<<<<< HEAD
         link: function (scope, elem, attrs) {
 >>>>>>> Added dependency on elastic input
+=======
+        link: function(scope, elem, attrs) {
+>>>>>>> Added 'selectAll' attribute, to automatically select the contents of the input when editing starts
           var input = elem.find('input');
           var lastValue;
 
@@ -62,11 +70,14 @@
           scope.spanClick = function(e) {
             console.log(e);
             scope.isEditing = true;
-          }
+          };
 
           scope.onInputClick = function() {
             scope.isEditing = true;
-          }
+            if (attrs.hasOwnProperty('selectAll')) {
+              input.select();
+            }
+          };
 
           scope.onKeyPress = function(e) {
             console.log(e);
@@ -75,9 +86,9 @@
               $(inputElem).blur();
               return;
             }
-          }
+          };
 
-          scope.$watch('isEditing', function (val, oldVal) {
+          scope.$watch('isEditing', function(val, oldVal) {
             var editPromise, inputElm = input[0];
 >>>>>>> Added dependency on elastic input
             if (attrs.editMode !== undefined) {
@@ -126,11 +137,16 @@
             lastValue = newVal;
             scope.editingValue = newVal;
           });
+<<<<<<< HEAD
         }
       };
     }]);
+=======
+        },
+      };
+    },]);
+>>>>>>> Added 'selectAll' attribute, to automatically select the contents of the input when editing starts
 })();
-
 
 /**
  * Created by Gabriel_Grinberg on 6/29/14.
