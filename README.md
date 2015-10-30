@@ -56,8 +56,16 @@ Also, a "is-placeholder" class will be added so you can style it your own way (#
 
 Credit goes to @mmaday!
 
+### Select All:
+
+To automatically select all text when entering edit mode, add the "select-all" attribute to the element.
+
+```
+<h1 editable-text="myText" select-all>
+```
+
 #### Validating processing, and server requests
-To validate content, process it or send it to your server, you can pass a function as the "on-change" attribute, with *value* as its parameter, as following: 
+To validate content, process it or send it to your server, you can pass a function as the "on-change" attribute, with *value* as its parameter, as following:
 
 
 **Validation and processing example:**
@@ -142,4 +150,3 @@ To use a different template for the "working.." that shows when a promise is wai
       EditableTextHelperProvider.setWorkingText('<span class="fa fa-spin fa-spinner"></span>');
     });
 ```
-

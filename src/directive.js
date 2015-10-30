@@ -11,7 +11,7 @@
           editableText: '=',
           editMode: '=',
           placeholder: '@',
-          onChange: '&'
+          onChange: '&',
         },
         transclude: true,
         template: '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}" tooltip-placement="bottom" tooltip="Rename">' +
@@ -93,5 +93,5 @@
           });
         },
       };
-    },]);
+    }, ]);
 })();
