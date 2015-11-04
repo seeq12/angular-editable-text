@@ -12,7 +12,7 @@
           editMode: '=',
           placeholder: '@',
           onChange: '&',
-          onError: '&',
+          onReject: '&',
         },
         transclude: true,
         template:
@@ -74,8 +74,8 @@
                     scope.editableText = scope.editingValue = value;
                     scope.isWorking = false;
                   }, function() {
-                    if (scope.onError) {
-                      scope.onError();
+                    if (scope.onReject) {
+                      scope.onReject();
                     }
                     scope.editingValue = scope.editableText;
                     scope.isWorking = false;
