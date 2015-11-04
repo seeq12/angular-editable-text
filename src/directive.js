@@ -12,13 +12,14 @@
           editMode: '=',
           placeholder: '@',
           onChange: '&',
-          onReject: '&',
+          onReject: '&'
         },
         transclude: true,
         template:
           '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}" ng-style="{\'max-width\': \'inherit\'}" >' +
             '<input ng-blur="onInputBlur()" ng-click="onInputClick()" ng-keydown="onKeyPress($event)" ng-model="editingValue" placeholder="{{placeholder}}"' +
               'type="text" pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="inherit" />' +
+
           // '<span ng-show="isWorking" class="' + EditableTextHelper.workingClassName + '">' + EditableTextHelper.workingText + '</span>' +
           '</span>',
         link: function(scope, elem, attrs) {
@@ -44,6 +45,7 @@
 
           scope.onInputBlur = function() {
             scope.isEditing = false;
+
             // Kind of a hacky way, would be great to not have to do this
             $timeout(function() {
               $(input[0]).width($(elem).width());
@@ -61,7 +63,8 @@
           };
 
           scope.$watch('isEditing', function(val, oldVal) {
-            var editPromise, inputElm = input[0];
+            var editPromise;
+            var inputElm = input[0];
             if (attrs.editMode !== undefined) {
               scope.editMode = val;
             }
@@ -77,9 +80,11 @@
                     scope.editableText = scope.editingValue = value;
                     scope.isWorking = false;
                   }, function() {
+
                     if (scope.onReject) {
                       scope.onReject();
                     }
+
                     scope.editingValue = scope.editableText;
                     scope.isWorking = false;
                   });
@@ -102,7 +107,7 @@
             lastValue = newVal;
             scope.editingValue = newVal;
           });
-        },
+        }
       };
-    }, ]);
+    } ]);
 })();

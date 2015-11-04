@@ -35,11 +35,15 @@
 =======
           onChange: '&',
 <<<<<<< HEAD
+<<<<<<< HEAD
           onError: '&',
 >>>>>>> Added onError option
 =======
           onReject: '&',
 >>>>>>> Switched onError to onReject
+=======
+          onReject: '&'
+>>>>>>> Updated with jscs
         },
         transclude: true,
 <<<<<<< HEAD
@@ -69,7 +73,11 @@
           '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}" ng-style="{\'max-width\': \'inherit\'}" >' +
             '<input ng-blur="onInputBlur()" ng-click="onInputClick()" ng-keydown="onKeyPress($event)" ng-model="editingValue" placeholder="{{placeholder}}"' +
               'type="text" pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="inherit" />' +
+<<<<<<< HEAD
 >>>>>>> Added ellipses to input
+=======
+
+>>>>>>> Updated with jscs
           // '<span ng-show="isWorking" class="' + EditableTextHelper.workingClassName + '">' + EditableTextHelper.workingText + '</span>' +
           '</span>',
 <<<<<<< HEAD
@@ -113,6 +121,7 @@
 
           scope.onInputBlur = function() {
             scope.isEditing = false;
+
             // Kind of a hacky way, would be great to not have to do this
             $timeout(function() {
               $(input[0]).width($(elem).width());
@@ -130,8 +139,13 @@
           };
 
           scope.$watch('isEditing', function(val, oldVal) {
+<<<<<<< HEAD
             var editPromise, inputElm = input[0];
 >>>>>>> Added dependency on elastic input
+=======
+            var editPromise;
+            var inputElm = input[0];
+>>>>>>> Updated with jscs
             if (attrs.editMode !== undefined) {
               scope.editMode = val;
             }
@@ -159,9 +173,11 @@
                     scope.editableText = scope.editingValue = value;
                     scope.isWorking = false;
                   }, function() {
+
                     if (scope.onReject) {
                       scope.onReject();
                     }
+
                     scope.editingValue = scope.editableText;
                     scope.isWorking = false;
                   });
@@ -185,6 +201,7 @@
             scope.editingValue = newVal;
           });
 <<<<<<< HEAD
+<<<<<<< HEAD
         }
       };
     }]);
@@ -193,6 +210,11 @@
       };
     },]);
 >>>>>>> Added 'selectAll' attribute, to automatically select the contents of the input when editing starts
+=======
+        }
+      };
+    } ]);
+>>>>>>> Updated with jscs
 })();
 
 /**
