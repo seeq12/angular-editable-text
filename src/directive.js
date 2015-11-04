@@ -14,8 +14,10 @@
           onChange: '&',
         },
         transclude: true,
-        template: '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}">' +
-          '<input ng-blur="isEditing=false;" ng-click="onInputClick()" ng-keydown="onKeyPress($event)" ng-model="editingValue" placeholder="{{placeholder}}" type="text" pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="auto" />' +
+        template:
+          '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}">' +
+            '<input ng-blur="isEditing=false;" ng-click="onInputClick()" ng-keydown="onKeyPress($event)" ng-model="editingValue" placeholder="{{placeholder}}"' + 
+              'type="text" pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="auto" />' +
           // '<span ng-show="isWorking" class="' + EditableTextHelper.workingClassName + '">' + EditableTextHelper.workingText + '</span>' +
           '</span>',
         link: function(scope, elem, attrs) {
@@ -44,7 +46,13 @@
             var inputElem = input[0];
             if (e.which === 13) {
               $(inputElem).blur();
-              return;
+              // Kind of a hacky way, would be great to not have to do this
+              $timeout(function() {
+                $(input[0]).width($(elem).width());
+              });
+            } else if (e.which === 27) {
+              scope.editingValue = scope.editableText;
+              $(inputElem).blur();
             }
           };
 
