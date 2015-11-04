@@ -67,7 +67,7 @@
 >>>>>>> Minor fixes, including escape behavior
 =======
           '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}" ng-style="{\'max-width\': \'inherit\'}" >' +
-            '<input ng-blur="isEditing=false;" ng-click="onInputClick()" ng-keydown="onKeyPress($event)" ng-model="editingValue" placeholder="{{placeholder}}"' +
+            '<input ng-blur="onInputBlur()" ng-click="onInputClick()" ng-keydown="onKeyPress($event)" ng-model="editingValue" placeholder="{{placeholder}}"' +
               'type="text" pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="inherit" />' +
 >>>>>>> Added ellipses to input
           // '<span ng-show="isWorking" class="' + EditableTextHelper.workingClassName + '">' + EditableTextHelper.workingText + '</span>' +
@@ -107,14 +107,22 @@
             }
           };
 
+          $timeout(function() {
+            $(input[0]).width($(elem).width());
+          });
+
+          scope.onInputBlur = function() {
+            scope.isEditing = false;
+            // Kind of a hacky way, would be great to not have to do this
+            $timeout(function() {
+              $(input[0]).width($(elem).width());
+            });
+          };
+
           scope.onKeyPress = function(e) {
             var inputElem = input[0];
             if (e.which === 13) {
               $(inputElem).blur();
-              // Kind of a hacky way, would be great to not have to do this
-              $timeout(function() {
-                $(input[0]).width($(elem).width());
-              });
             } else if (e.which === 27) {
               scope.editingValue = scope.editableText;
               $(inputElem).blur();
