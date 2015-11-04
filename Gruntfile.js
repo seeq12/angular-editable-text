@@ -123,6 +123,22 @@ module.exports = function (grunt) {
             }
         },
 
+        jscs: {
+            options: {
+                config: '.jscsrc',
+                maxErrors: null
+            },
+            report: {
+                src: 'src/*.js'
+            },
+            fix: {
+                src: 'src/*.js',
+                options: {
+                    fix: true
+                }
+            }
+        },
+
         // Empties folders to start fresh
         clean: {
             dist: {

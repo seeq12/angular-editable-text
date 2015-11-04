@@ -2,10 +2,10 @@
  * Created by Gabriel Grinberg on 6/13/14.
  */
 
-(function () {
+(function() {
   'use strict';
   angular.module('gg.editableText')
-    .directive('editableText', ['EditableTextHelper', function (EditableTextHelper) {
+    .directive('editableText', ['EditableTextHelper', function(EditableTextHelper) {
       return {
         scope: {
           editableText: '=',
@@ -20,9 +20,9 @@
         '<span ng-hide="isEditing" ng-transclude></span>' +
         '<span ng-show="isWorking" class="' + EditableTextHelper.workingClassName + '">' + EditableTextHelper.workingText + '</span>' +
         '</span>',
-        link: function (scope, elem, attrs) {
-          var input = elem.find('input'),
-            lastValue;
+        link: function(scope, elem, attrs) {
+          var input = elem.find('input');
+          var lastValue;
 
           scope.isEditing = !!scope.editMode;
 
@@ -30,47 +30,53 @@
 
           elem.addClass('gg-editable-text');
 
-          scope.$watch('isEditing', function (val, oldVal) {
-            var editPromise, inputElm = input[0];
+          scope.$watch('isEditing', function(val, oldVal) {
+            var editPromise;
+            var inputElm = input[0];
             if (attrs.editMode !== undefined) {
               scope.editMode = val;
             }
+
             elem[val ? 'addClass' : 'removeClass']('editing');
             if (val) {
               inputElm.focus();
               inputElm.selectionStart = inputElm.selectionEnd = scope.editingValue ? scope.editingValue.length : 0;
+
               //fix for FF
-            }
-            else {
+            } else {
               if (attrs.onChange && val !== oldVal && scope.editingValue != lastValue) {
                 //accept promise, or plain function..
                 editPromise = scope.onChange({value: scope.editingValue});
                 if (editPromise && editPromise.then) {
                   scope.isWorking = true;
-                  editPromise.then(function (value) {
+                  editPromise.then(function(value) {
                     scope.editableText = scope.editingValue = value;
                     scope.isWorking = false;
-                  }, function () {
+                  }, function() {
+
                     scope.editingValue = scope.editableText;
                     scope.isWorking = false;
                   });
+                } else if (editPromise) {
+                  scope.editableText = scope.editingValue = editPromise;
+                } else {
+                  scope.editingValue = scope.editableText;
                 }
-                else if (editPromise) scope.editableText = scope.editingValue = editPromise;
-                else scope.editingValue = scope.editableText;
+              } else {
+                scope.editableText = scope.editingValue;
               }
-              else scope.editableText = scope.editingValue;
             }
           });
 
-          scope.$watch('editMode', function (val) {
+          scope.$watch('editMode', function(val) {
             scope.isEditing = !!val;
           });
 
-          scope.$watch('editableText', function (newVal) {
+          scope.$watch('editableText', function(newVal) {
             lastValue = newVal;
             scope.editingValue = newVal;
           });
         }
-      }
+      };
     }]);
 })();
