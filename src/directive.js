@@ -5,7 +5,7 @@
 (function() {
   'use strict';
   angular.module('gg.editableText', ['puElasticInput'])
-    .directive('editableText', ['EditableTextHelper', function(EditableTextHelper) {
+    .directive('editableText', ['$timeout', 'EditableTextHelper', function($timeout, EditableTextHelper) {
       return {
         scope: {
           editableText: '=',
