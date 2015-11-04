@@ -34,6 +34,7 @@
         },
         transclude: true,
 <<<<<<< HEAD
+<<<<<<< HEAD
         template: '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}">' +
         '<input ng-show="isEditing" ng-blur="isEditing=false;" ng-keypress="($event.which === 13) && (isEditing = false)" ng-model="editingValue" placeholder="{{placeholder}}"/>' +
         '<span ng-hide="isEditing || isWorking" class="original-text" tabindex="0" ng-click="isEditing=true" ng-focus="isEditing=true;">{{placeholder ? (editingValue ? editingValue : placeholder) : editingValue}}</span>' +
@@ -43,9 +44,11 @@
         link: function(scope, elem, attrs) {
 =======
         template: '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}" tooltip-placement="bottom" tooltip="Rename">' +
+=======
+        template: '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}">' +
+>>>>>>> General cleanup
           '<input ng-blur="isEditing=false;" ng-click="onInputClick()" ng-keydown="onKeyPress($event)" ng-model="editingValue" placeholder="{{placeholder}}" type="text" pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="auto" />' +
-          '<span ng-hide="isEditing" ng-transclude></span>' +
-          '<span ng-show="isWorking" class="' + EditableTextHelper.workingClassName + '">' + EditableTextHelper.workingText + '</span>' +
+          // '<span ng-show="isWorking" class="' + EditableTextHelper.workingClassName + '">' + EditableTextHelper.workingText + '</span>' +
           '</span>',
 <<<<<<< HEAD
         link: function (scope, elem, attrs) {
@@ -56,12 +59,18 @@
           var input = elem.find('input');
           var lastValue;
 
+          // Set the width of the input element on DOM load
+          $timeout(function() {
+            $(input[0]).width($(elem).width());
+          });
+
           scope.isEditing = !!scope.editMode;
 
           scope.editingValue = scope.editableText;
 
           elem.addClass('gg-editable-text');
 
+<<<<<<< HEAD
 <<<<<<< HEAD
           scope.$watch('isEditing', function(val, oldVal) {
             var editPromise;
@@ -72,6 +81,8 @@
             scope.isEditing = true;
           };
 
+=======
+>>>>>>> General cleanup
           scope.onInputClick = function() {
             scope.isEditing = true;
             if (attrs.hasOwnProperty('selectAll')) {
@@ -80,7 +91,6 @@
           };
 
           scope.onKeyPress = function(e) {
-            console.log(e);
             var inputElem = input[0];
             if (e.which === 13) {
               $(inputElem).blur();
@@ -96,6 +106,7 @@
             }
 
             elem[val ? 'addClass' : 'removeClass']('editing');
+<<<<<<< HEAD
             if (val) {
 <<<<<<< HEAD
               inputElm.focus();
@@ -105,6 +116,9 @@
 =======
 >>>>>>> Added dependency on elastic input
             } else {
+=======
+            if (!val) {
+>>>>>>> General cleanup
               if (attrs.onChange && val !== oldVal && scope.editingValue != lastValue) {
                 //accept promise, or plain function..
                 editPromise = scope.onChange({value: scope.editingValue});
