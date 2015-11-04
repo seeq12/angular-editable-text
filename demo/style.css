@@ -33,6 +33,9 @@
   line-height:inherit;
   display:inline-block;
   text-decoration: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .gg-editable-text span{

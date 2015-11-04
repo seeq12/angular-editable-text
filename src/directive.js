@@ -16,19 +16,14 @@
         },
         transclude: true,
         template:
-          '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}">' +
-            '<input ng-blur="isEditing=false;" ng-click="onInputClick()" ng-keydown="onKeyPress($event)" ng-model="editingValue" placeholder="{{placeholder}}"' + 
-              'type="text" pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="auto" />' +
+          '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}" ng-style="{\'max-width\': \'inherit\'}" >' +
+            '<input ng-blur="isEditing=false;" ng-click="onInputClick()" ng-keydown="onKeyPress($event)" ng-model="editingValue" placeholder="{{placeholder}}"' +
+              'type="text" pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="inherit" />' +
           // '<span ng-show="isWorking" class="' + EditableTextHelper.workingClassName + '">' + EditableTextHelper.workingText + '</span>' +
           '</span>',
         link: function(scope, elem, attrs) {
           var input = elem.find('input');
           var lastValue;
-
-          // Set the width of the input element on DOM load
-          $timeout(function() {
-            $(input[0]).width($(elem).width());
-          });
 
           scope.isEditing = !!scope.editMode;
 
