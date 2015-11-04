@@ -30,7 +30,12 @@
           editableText: '=',
           editMode: '=',
           placeholder: '@',
+<<<<<<< HEAD
           onChange: '&'
+=======
+          onChange: '&',
+          onError: '&',
+>>>>>>> Added onError option
         },
         transclude: true,
 <<<<<<< HEAD
@@ -141,7 +146,9 @@
                     scope.editableText = scope.editingValue = value;
                     scope.isWorking = false;
                   }, function() {
-
+                    if (scope.onError) {
+                      scope.onError();
+                    }
                     scope.editingValue = scope.editableText;
                     scope.isWorking = false;
                   });
