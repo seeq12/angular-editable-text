@@ -6,7 +6,7 @@
   angular.module('gg.editableText')
         .provider('EditableTextHelper', function() {
 
-          var workingText = 'Working..';
+          var workingText = '';
           var workingClassName = '';
 
           this.setWorkingText = function(text) {

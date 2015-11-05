@@ -15,7 +15,7 @@
 (function() {
   'use strict';
   angular.module('gg.editableText', ['puElasticInput'])
-    .directive('editableText', ['$timeout', 'EditableTextHelper', function($timeout, EditableTextHelper) {
+    .directive('editableText', ['$rootScope', 'EditableTextHelper', function($rootScope, EditableTextHelper) {
       return {
         scope: {
           editableText: '=',
@@ -30,7 +30,7 @@
             '<input ng-blur="onInputBlur()" ng-click="onInputClick()" ng-keydown="onKeyPress($event)" ng-model="editingValue" placeholder="{{placeholder}}"' +
               'type="text" pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="inherit" />' +
 
-          // '<span ng-show="isWorking" class="' + EditableTextHelper.workingClassName + '">' + EditableTextHelper.workingText + '</span>' +
+            '<span ng-show="isWorking && EditableTextHelper.workingText.length" class="' + EditableTextHelper.workingClassName + '">' + EditableTextHelper.workingText + '</span>' +
           '</span>',
         link: function(scope, elem, attrs) {
           var input = elem.find('input');
@@ -49,7 +49,7 @@
             }
           };
 
-          $timeout(function() {
+          $rootScope.$evalAsync(function() {
             $(input[0]).width($(elem).width());
           });
 
@@ -57,7 +57,7 @@
             scope.isEditing = false;
 
             // Kind of a hacky way, would be great to not have to do this
-            $timeout(function() {
+            $rootScope.$evalAsync(function() {
               $(input[0]).width($(elem).width());
             });
           };
@@ -72,16 +72,16 @@
             }
           };
 
-          scope.$watch('isEditing', function(val, oldVal) {
+          scope.$watch('isEditing', function(isEditing, oldIsEditing) {
             var editPromise;
             var inputElm = input[0];
             if (attrs.editMode !== undefined) {
-              scope.editMode = val;
+              scope.editMode = isEditing;
             }
 
-            elem[val ? 'addClass' : 'removeClass']('editing');
-            if (!val) {
-              if (attrs.onChange && val !== oldVal && scope.editingValue != lastValue) {
+            elem[isEditing ? 'addClass' : 'removeClass']('editing');
+            if (!isEditing) {
+              if (attrs.onChange && isEditing !== oldIsEditing && scope.editingValue != lastValue) {
                 //accept promise, or plain function..
                 editPromise = scope.onChange({value: scope.editingValue});
                 if (editPromise && editPromise.then) {
@@ -130,7 +130,7 @@
   angular.module('gg.editableText')
         .provider('EditableTextHelper', function() {
 
-          var workingText = 'Working..';
+          var workingText = '';
           var workingClassName = '';
 
           this.setWorkingText = function(text) {
