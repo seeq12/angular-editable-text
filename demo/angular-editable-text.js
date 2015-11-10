@@ -8,9 +8,9 @@
 
 })();
 
-/*
-   Created by Gabriel Grinberg on 6/13/14.
-   */
+/**
+ * Based on gg.editableText, originally created by Gabriel Grinberg on 6/13/14.
+ */
 
 (function() {
   'use strict';
@@ -29,7 +29,7 @@
           '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}" ng-style="{\'max-width\': \'inherit\'}" >' +
             '<input ng-blur="onInputBlur()" ng-click="onInputClick()" ng-keydown="onKeyPress($event)" ng-model="editingValue" placeholder="{{placeholder}}"' +
               'type="text" pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="inherit" />' +
-
+              '<span ng-hide="isEditing" ng-transclude></span>' +
             '<span ng-show="isWorking && EditableTextHelper.workingText.length" class="' + EditableTextHelper.workingClassName + '">' + EditableTextHelper.workingText + '</span>' +
           '</span>',
         link: function(scope, elem, attrs) {
@@ -44,9 +44,6 @@
 
           scope.onInputClick = function() {
             scope.isEditing = true;
-            if (attrs.hasOwnProperty('selectAll')) {
-              input.select();
-            }
           };
 
           $rootScope.$evalAsync(function() {
@@ -80,7 +77,13 @@
             }
 
             elem[isEditing ? 'addClass' : 'removeClass']('editing');
-            if (!isEditing) {
+            if (isEditing) {
+              inputElm.focus();
+              inputElm.selectionStart = inputElm.selectionEnd = scope.editingValue ? scope.editingValue.length : 0;
+              if (attrs.hasOwnProperty('selectAll')) {
+                inputElm.select();
+              }
+            } else {
               if (attrs.onChange && isEditing !== oldIsEditing && scope.editingValue != lastValue) {
                 //accept promise, or plain function..
                 editPromise = scope.onChange({value: scope.editingValue});
