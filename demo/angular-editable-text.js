@@ -1,5 +1,5 @@
 /**
- * Created by Gabriel_Grinberg on 6/13/14.
+ * Based on gg.editableText, originally created by Gabriel Grinberg on 6/13/14.
  */
 
 (function() {
