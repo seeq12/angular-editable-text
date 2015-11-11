@@ -4,7 +4,7 @@
 
 (function() {
   'use strict';
-  angular.module('gg.editableText', []);
+  angular.module('gg.editableText', ['puElasticInput']);
 
 })();
 
@@ -14,7 +14,7 @@
 
 (function() {
   'use strict';
-  angular.module('gg.editableText', ['puElasticInput']).directive('ggEditableText', ggEditableText);
+  angular.module('gg.editableText').directive('ggEditableText', ggEditableText);
 
   function ggEditableText($rootScope, EditableTextHelper) {
       return {
@@ -128,33 +128,33 @@
 })();
 
 /**
- * Created by Gabriel_Grinberg on 6/29/14.
+ * Based on gg.editableText, originally created by Gabriel Grinberg on 6/13/14.
  */
-'use strict';
 (function() {
-  angular.module('gg.editableText')
-        .provider('EditableTextHelper', function() {
+  'use strict';
+  angular.module('gg.editableText').provider('EditableTextHelper', EditableTextHelper);
 
-          var workingText = '';
-          var workingClassName = '';
+  function EditableTextHelper() {
 
-          this.setWorkingText = function(text) {
-            workingText = text;
-            return this;
-          };
+    var workingText = '';
+    var workingClassName = '';
 
-          this.setWorkingClassName = function(name) {
-            workingClassName = name;
-            return this;
-          };
+    this.setWorkingText = function(text) {
+      workingText = text;
+      return this;
+    };
 
-          this.$get = function() {
-            return {
-              workingText: workingText,
-              workingClassName: workingClassName
-            };
-          };
+    this.setWorkingClassName = function(name) {
+      workingClassName = name;
+      return this;
+    };
 
-        });
+    this.$get = function() {
+      return {
+        workingText: workingText,
+        workingClassName: workingClassName
+      };
+    };
+
+  }
 })();
-

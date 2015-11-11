@@ -4,7 +4,7 @@
 
 (function() {
   'use strict';
-  angular.module('gg.editableText', ['puElasticInput']).directive('ggEditableText', ggEditableText);
+  angular.module('gg.editableText').directive('ggEditableText', ggEditableText);
 
   function ggEditableText($rootScope, EditableTextHelper) {
       return {
