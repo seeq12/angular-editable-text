@@ -177,19 +177,17 @@ module.exports = function (grunt) {
             }
         },
 
-        // ngmin tries to make the code safe for minification automatically by
-        // using the Angular long form for dependency injection. It doesn't work on
-        // things like resolve or inject so those have to be done manually.
-        ngmin: {
-            dist: {
-                files: [
-                    {
-                        expand: true,
-                        src: 'dist/*.js',
-                        dest: '.tmp'
-                    }
-                ]
-            }
+        ngAnnotate: {
+          options: {
+            singleQuotes: true
+          },
+          dist: {
+            files: [{
+              expand: true,
+              src: 'dist/*.js',
+              dest: '.tmp'
+            }]
+          }
         },
 
         concat: {
@@ -243,7 +241,6 @@ module.exports = function (grunt) {
 
         grunt.task.run([
             'clean:server',
-          //  'bowerInstall',
             'connect:livereload',
             'watch'
 
@@ -260,15 +257,12 @@ module.exports = function (grunt) {
     grunt.registerTask('build', [
         'clean:dist',
         'concat',
-        'ngmin',
+        'ngAnnotate',
         'uglify',
         'cssmin'
-       // 'test',
-       // 'coveralls'
     ]);
 
     grunt.registerTask('default', [
-        //'newer:jshint',
         'test',
         'build',
         'serve'
