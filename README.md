@@ -65,10 +65,12 @@ To automatically select all text when entering edit mode, add the "select-all" a
 ```
 
 #### Validating processing, and server requests
-To validate content, process it or send it to your server, you can pass a function as the "gg-on-change" attribute, with *value* as its parameter.
-When using "gg-on-change", it is up to you to update your model variable as appropriate in the handler. This allows you to use
-a read-only property as the model variable, then handle your update in the gg-on-change handler. For example, using a
-flux store as the model and calling a flux action in the change handler.
+To validate content or perform a custom action, process it or send it to your server, you can pass a function as the
+`gg-on-change` attribute, with *value* as its parameter.
+
+If the gg-on-change handler returns `undefined`, the model will not be updated. This can be useful
+for binding to a readonly property. The change handler can perform the actions to cause the readonly property to be
+updated, for example, using a flux store as the model and calling a flux action in the change handler.
 
 **Validation and processing example:**
 HTML:
@@ -79,15 +81,16 @@ HTML:
 yourController.js:
 ```
 $scope.validate=function validateContent(value){
-if (value.indexOf('red pinguins')==-1){
-alert('Title must contain red pinguins!');
-return false;
-}
-
-// update your model variable here
+  var deferred = $q.defer();
+  if (value.indexOf('red pinguins')==-1) {
+    alert('Title must contain red pinguins!');
+    deferred.reject();
+  } else {
+    deferred.resolve();
+  }
+  return deferred.promise;
 }
 ```
-
 
 **Async request example:**
 The on-change function can also return a promise, specially helpful for async calls.
@@ -110,6 +113,9 @@ $timeout(function () {
 	return d.promise;
 }
 ```
+
+If the gg-on-change handler returns a promise, the resolved value will be used to update the model. If the promise
+is rejected, the `gg-on-reject` handler is called and the model is reverted to its original value.
 
 While the promise is being resolved, a default text - "Working..." will show. In the configuration section you can
 learn how to change it.

@@ -16,7 +16,7 @@
   'use strict';
   angular.module('gg.editableText').directive('ggEditableText', ggEditableText);
 
-  function ggEditableText($rootScope, EditableTextHelper) {
+  function ggEditableText($rootScope, $q, EditableTextHelper) {
     return {
       restrict: 'EA',
       scope: {
@@ -85,7 +85,6 @@
       };
 
       function onIsEditing(isEditing, oldIsEditing) {
-        var editPromise;
         var inputElm = input[0];
         if (!attrs.hasOwnProperty('ggEditMode')) {
           scope.editMode = isEditing;
@@ -100,25 +99,27 @@
           }
         } else {
           if (attrs.hasOwnProperty('ggOnChange') && isEditing !== oldIsEditing && scope.editingValue != lastValue) {
-            //accept promise, or plain function..
-            editPromise = scope.onChange({value: scope.editingValue});
-            if (editPromise && editPromise.then) {
-              scope.isWorking = true;
-              editPromise.then(function(value) {
-                scope.editingValue = value;
-                scope.isWorking = false;
-              }, function() {
+            scope.isWorking = true;
 
-                if (scope.onReject) {
-                  scope.onReject();
-                }
+            // Wrap the return of onChange so that promises and values are treated the same.
+            $q.when(scope.onChange({ value: scope.editingValue }))
+              .then(
+                function(value) {
+                  if (typeof value !== 'undefined') {
+                    scope.editingText = scope.editingValue = value;
+                  }
+                },
 
-                scope.editingValue = scope.editableText;
+                function() {
+                  if (scope.onReject) {
+                    scope.onReject();
+                  }
+
+                  scope.editingValue = scope.editableText;
+                })
+              .finally(function() {
                 scope.isWorking = false;
               });
-            } else {
-              scope.editingValue = scope.editableText;
-            }
           } else {
             scope.editableText = scope.editingValue;
           }
