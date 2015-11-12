@@ -23,8 +23,7 @@
         editableText: '=ggEditableText',
         editMode: '=ggIsEditing',
         placeholder: '@',
-        onChange: '&ggOnChange',
-        onReject: '&ggOnReject'
+        onChange: '&ggOnChange'
       },
       transclude: true,
       template:
@@ -41,6 +40,7 @@
     function link(scope, elem, attrs) {
       var input = elem.find('input');
       var lastValue;
+      var wasClicked = false;
 
       scope.$watch('isEditing', onIsEditing);
       scope.$watch('editMode', function(val) {
@@ -63,6 +63,7 @@
 
       scope.onInputClick = function() {
         scope.isEditing = true;
+        wasClicked = true;
       };
 
       scope.onInputBlur = function() {
@@ -93,10 +94,16 @@
         elem[isEditing ? 'addClass' : 'removeClass']('editing');
         if (isEditing) {
           inputElm.focus();
-          inputElm.selectionStart = inputElm.selectionEnd = scope.editingValue ? scope.editingValue.length : 0;
+          if (!wasClicked) {
+            inputElm.selectionStart = inputElm.selectionEnd = scope.editingValue ? scope.editingValue.length : 0;
+          }
+
+          wasClicked = false;
+
           if (attrs.hasOwnProperty('ggSelectAll')) {
             inputElm.select();
           }
+
         } else {
           if (attrs.hasOwnProperty('ggOnChange') && isEditing !== oldIsEditing && scope.editingValue != lastValue) {
             scope.isWorking = true;
@@ -111,10 +118,6 @@
                 },
 
                 function() {
-                  if (scope.onReject) {
-                    scope.onReject();
-                  }
-
                   scope.editingValue = scope.editableText;
                 })
               .finally(function() {
