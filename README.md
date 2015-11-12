@@ -93,7 +93,10 @@ $scope.validate=function validateContent(value){
 ```
 
 **Async request example:**
-The on-change function can also return a promise, specially helpful for async calls.
+The on-change function can also return a promise. If the gg-on-change handler returns a promise, the resolved value
+will be used to update the model. If the promise is rejected, the model is reverted to its original value. If the
+resolved value is `undefined`, then the model is not updated (see above).
+
 
 HTML:
 ```
@@ -114,10 +117,7 @@ $timeout(function () {
 }
 ```
 
-If the gg-on-change handler returns a promise, the resolved value will be used to update the model. If the promise
-is rejected, the `gg-on-reject` handler is called and the model is reverted to its original value.
-
-While the promise is being resolved, a default text - "Working..." will show. In the configuration section you can
+While the promise is being resolved, the default behavior is to display an empty string. In the configuration section you can
 learn how to change it.
 
 
@@ -144,13 +144,9 @@ if (isEditing) console.log('My title is being edited!');
 ```
 
 
-
-
-
-
 ## Configuration
 
-To use a different template for the "working.." that shows when a promise is waiting to be resolved, you can inject EditableTextHelperProvider to a config block as following (here I'm using a FontAwesome spinner instead):
+To use a different template when a promise is waiting to be resolved, you can inject EditableTextHelperProvider to a config block as following (here I'm using a FontAwesome spinner instead):
 ```
   .module('editableTextDemo', ['gg.editableText'])
     .config(function (EditableTextHelperProvider) {
