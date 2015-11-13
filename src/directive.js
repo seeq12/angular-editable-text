@@ -95,7 +95,7 @@
           }
 
         } else {
-          if (attrs.hasOwnProperty('ggOnChange') && isEditing !== oldIsEditing && scope.editingValue != lastValue) {
+          if (attrs.hasOwnProperty('ggOnChange') && isEditing !== oldIsEditing && scope.editingValue !== lastValue) {
             scope.isWorking = true;
 
             // Wrap the return of onChange so that promises and values are treated the same.
