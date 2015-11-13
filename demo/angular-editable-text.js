@@ -1,10 +1,10 @@
 /**
- * Created by Gabriel_Grinberg on 6/13/14.
+ * Based on gg.editableText, originally created by Gabriel Grinberg on 6/13/14.
  */
 
 (function() {
   'use strict';
-  angular.module('gg.editableText', []);
+  angular.module('gg.editableText', ['puElasticInput']);
 
 })();
 
@@ -14,145 +14,152 @@
 
 (function() {
   'use strict';
-  angular.module('gg.editableText', ['puElasticInput'])
-    .directive('editableText', ['$rootScope', 'EditableTextHelper', function($rootScope, EditableTextHelper) {
-      return {
-        scope: {
-          editableText: '=',
-          editMode: '=',
-          placeholder: '@',
-          onChange: '&',
-          onReject: '&'
-        },
-        transclude: true,
-        template:
-          '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}" ng-style="{\'max-width\': \'inherit\'}" >' +
-            '<input ng-blur="onInputBlur()" ng-click="onInputClick()" ng-keydown="onKeyPress($event)" ng-model="editingValue" placeholder="{{placeholder}}"' +
-              'type="text" pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="inherit" />' +
-              '<span ng-hide="isEditing" ng-transclude></span>' +
-            '<span ng-show="isWorking && EditableTextHelper.workingText.length" class="' + EditableTextHelper.workingClassName + '">' + EditableTextHelper.workingText + '</span>' +
-          '</span>',
-        link: function(scope, elem, attrs) {
-          var input = elem.find('input');
-          var lastValue;
+  angular.module('gg.editableText').directive('ggEditableText', ggEditableText);
 
-          scope.isEditing = !!scope.editMode;
+  function ggEditableText($rootScope, $q, EditableTextHelper) {
+    return {
+      restrict: 'EA',
+      scope: {
+        editableText: '=ggEditableText',
+        editMode: '=ggIsEditing',
+        placeholder: '@',
+        onChange: '&ggOnChange'
+      },
+      transclude: true,
+      template:
+        '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}" ng-style="{\'max-width\': \'inherit\'}" >' +
+          '<input ng-blur="onInputBlur()" ng-click="onInputClick()" ng-keydown="onKeyPress($event)" ng-model="editingValue" ' +
+            'placeholder="{{placeholder}}" type="text" pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="inherit" />' +
+          '<span ng-hide="isEditing" ng-transclude></span>' +
+          '<span ng-show="isWorking && EditableTextHelper.workingText.length" class="' + EditableTextHelper.workingClassName + '">' +
+            EditableTextHelper.workingText + '</span>' +
+        '</span>',
+      link: link
+    };
 
+    function link(scope, elem, attrs) {
+      var input = elem.find('input');
+      var lastValue;
+      var wasClicked = false;
+
+      scope.$watch('isEditing', onIsEditing);
+      scope.$watch('editMode', function(val) {
+        scope.isEditing = !!val;
+      });
+
+      scope.$watch('editableText', function(newVal) {
+        lastValue = newVal;
+        scope.editingValue = newVal;
+      });
+
+      $rootScope.$evalAsync(function() {
+        $(input[0]).width($(elem).width());
+      });
+
+      scope.isEditing = !!scope.editMode;
+      scope.editingValue = scope.editableText;
+
+      elem.addClass('gg-editable-text');
+
+      scope.onInputClick = function() {
+        scope.isEditing = true;
+        wasClicked = true;
+      };
+
+      scope.onInputBlur = function() {
+        scope.isEditing = false;
+
+        // Kind of a hacky way, would be great to not have to do this
+        $rootScope.$evalAsync(function() {
+          $(input[0]).width($(elem).width());
+        });
+      };
+
+      scope.onKeyPress = function(e) {
+        var inputElem = input[0];
+        if (e.which === 13) {
+          $(inputElem).blur();
+        } else if (e.which === 27) {
           scope.editingValue = scope.editableText;
-
-          elem.addClass('gg-editable-text');
-
-          scope.onInputClick = function() {
-            scope.isEditing = true;
-          };
-
-          $rootScope.$evalAsync(function() {
-            $(input[0]).width($(elem).width());
-          });
-
-          scope.onInputBlur = function() {
-            scope.isEditing = false;
-
-            // Kind of a hacky way, would be great to not have to do this
-            $rootScope.$evalAsync(function() {
-              $(input[0]).width($(elem).width());
-            });
-          };
-
-          scope.onKeyPress = function(e) {
-            var inputElem = input[0];
-            if (e.which === 13) {
-              $(inputElem).blur();
-            } else if (e.which === 27) {
-              scope.editingValue = scope.editableText;
-              $(inputElem).blur();
-            }
-          };
-
-          scope.$watch('isEditing', function(isEditing, oldIsEditing) {
-            var editPromise;
-            var inputElm = input[0];
-            if (attrs.editMode !== undefined) {
-              scope.editMode = isEditing;
-            }
-
-            elem[isEditing ? 'addClass' : 'removeClass']('editing');
-            if (isEditing) {
-              inputElm.focus();
-              inputElm.selectionStart = inputElm.selectionEnd = scope.editingValue ? scope.editingValue.length : 0;
-              if (attrs.hasOwnProperty('selectAll')) {
-                inputElm.select();
-              }
-            } else {
-              if (attrs.onChange && isEditing !== oldIsEditing && scope.editingValue != lastValue) {
-                //accept promise, or plain function..
-                editPromise = scope.onChange({value: scope.editingValue});
-                if (editPromise && editPromise.then) {
-                  scope.isWorking = true;
-                  editPromise.then(function(value) {
-                    scope.editableText = scope.editingValue = value;
-                    scope.isWorking = false;
-                  }, function() {
-
-                    if (scope.onReject) {
-                      scope.onReject();
-                    }
-
-                    scope.editingValue = scope.editableText;
-                    scope.isWorking = false;
-                  });
-                } else if (editPromise) {
-                  scope.editableText = scope.editingValue = editPromise;
-                } else {
-                  scope.editingValue = scope.editableText;
-                }
-              } else {
-                scope.editableText = scope.editingValue;
-              }
-            }
-          });
-
-          scope.$watch('editMode', function(val) {
-            scope.isEditing = !!val;
-          });
-
-          scope.$watch('editableText', function(newVal) {
-            lastValue = newVal;
-            scope.editingValue = newVal;
-          });
+          $(inputElem).blur();
         }
       };
-    } ]);
+
+      function onIsEditing(isEditing, oldIsEditing) {
+        var inputElm = input[0];
+        if (!attrs.hasOwnProperty('ggEditMode')) {
+          scope.editMode = isEditing;
+        }
+
+        elem[isEditing ? 'addClass' : 'removeClass']('editing');
+        if (isEditing) {
+          inputElm.focus();
+          if (!wasClicked) {
+            inputElm.selectionStart = inputElm.selectionEnd = scope.editingValue ? scope.editingValue.length : 0;
+          }
+
+          wasClicked = false;
+
+          if (attrs.hasOwnProperty('ggSelectAll')) {
+            inputElm.select();
+          }
+
+        } else {
+          if (attrs.hasOwnProperty('ggOnChange') && isEditing !== oldIsEditing && scope.editingValue !== lastValue) {
+            scope.isWorking = true;
+
+            // Wrap the return of onChange so that promises and values are treated the same.
+            $q.when(scope.onChange({ value: scope.editingValue }))
+              .then(
+                function(value) {
+                  if (typeof value !== 'undefined') {
+                    scope.editingText = scope.editingValue = value;
+                  }
+                },
+
+                function() {
+                  scope.editingValue = scope.editableText;
+                })
+              .finally(function() {
+                scope.isWorking = false;
+              });
+          } else {
+            scope.editableText = scope.editingValue;
+          }
+        }
+      }
+    }
+  }
 })();
 
 /**
- * Created by Gabriel_Grinberg on 6/29/14.
+ * Based on gg.editableText, originally created by Gabriel Grinberg on 6/13/14.
  */
-'use strict';
 (function() {
-  angular.module('gg.editableText')
-        .provider('EditableTextHelper', function() {
+  'use strict';
+  angular.module('gg.editableText').provider('EditableTextHelper', EditableTextHelper);
 
-          var workingText = '';
-          var workingClassName = '';
+  function EditableTextHelper() {
 
-          this.setWorkingText = function(text) {
-            workingText = text;
-            return this;
-          };
+    var workingText = '';
+    var workingClassName = '';
 
-          this.setWorkingClassName = function(name) {
-            workingClassName = name;
-            return this;
-          };
+    this.setWorkingText = function(text) {
+      workingText = text;
+      return this;
+    };
 
-          this.$get = function() {
-            return {
-              workingText: workingText,
-              workingClassName: workingClassName
-            };
-          };
+    this.setWorkingClassName = function(name) {
+      workingClassName = name;
+      return this;
+    };
 
-        });
+    this.$get = function() {
+      return {
+        workingText: workingText,
+        workingClassName: workingClassName
+      };
+    };
+
+  }
 })();
-

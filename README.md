@@ -36,7 +36,7 @@ To allow a line of text, for example, a title of your article editor, to be edit
 
 HTML:
 ```
-<h1 editable-text="myTitle"></h1>
+<h1 gg-editable-text="myTitle"></h1>
 ```
 
 Inside yourController.js:
@@ -48,7 +48,7 @@ This will make your title editable on click. Note that whatever was inside your 
 
 ### Placeholder:
 ```
-<h1 editable-text="myText" placeholder="your placeholder text">
+<h1 gg-editable-text="myText" placeholder="your placeholder text">
 ```
 
 
@@ -61,40 +61,46 @@ Credit goes to @mmaday!
 To automatically select all text when entering edit mode, add the "select-all" attribute to the element.
 
 ```
-<h1 editable-text="myText" select-all>
+<h1 gg-editable-text="myText" gg-select-all>
 ```
 
 #### Validating processing, and server requests
-To validate content, process it or send it to your server, you can pass a function as the "on-change" attribute, with *value* as its parameter, as following:
+To validate content or perform a custom action, process it or send it to your server, you can pass a function as the
+`gg-on-change` attribute, with *value* as its parameter.
 
+If the gg-on-change handler returns `undefined`, the model will not be updated. This can be useful
+for binding to a readonly property. The change handler can perform the actions to cause the readonly property to be
+updated, for example, using a flux store as the model and calling a flux action in the change handler.
 
 **Validation and processing example:**
 HTML:
 ```
-<h1 editable-text="myTitle" on-change="validate(value)"></h1>
+<h1 gg-editable-text="myTitle" gg-on-change="validate(value)"></h1>
 ```
 
 yourController.js:
 ```
 $scope.validate=function validateContent(value){
-if (value.indexOf('red pinguins')==-1){
-alert('Title must contain red pinguins!');
-return false; //returning false in the on-change function will cancel the change and revert to the previous value
-}
-
-if (value.length>30) return value.substring(0,100)+'...'; //you can process the text by returning a different value
-
-return value;  //if we didn't need validation nor processing, return the value that was passed.
+  var deferred = $q.defer();
+  if (value.indexOf('red pinguins')==-1) {
+    alert('Title must contain red pinguins!');
+    deferred.reject();
+  } else {
+    deferred.resolve();
+  }
+  return deferred.promise;
 }
 ```
 
-
 **Async request example:**
-The on-change function can also return a promise, specially helpful for async calls. You must resolve the promise with the value you want, or reject it to cancel any changes.
+The on-change function can also return a promise. If the gg-on-change handler returns a promise, the resolved value
+will be used to update the model. If the promise is rejected, the model is reverted to its original value. If the
+resolved value is `undefined`, then the model is not updated (see above).
+
 
 HTML:
 ```
-<h1 editable-text="myTitle" on-change="saveToServer(value)"></h1>
+<h1 gg-editable-text="myTitle" gg-on-change="saveToServer(value)"></h1>
 ```
 
 yourController.js:
@@ -111,7 +117,8 @@ $timeout(function () {
 }
 ```
 
-While the promise is being resolved, a default text - "Working..." will show. In the configuration section you can learn how to change it.
+While the promise is being resolved, the default behavior is to display an empty string. In the configuration section you can
+learn how to change it.
 
 
 #### Edit mode control
@@ -119,7 +126,7 @@ Sometimes you will need to manually invoke edit mode for a specific component, o
 
 HTML:
 ```
-<h2 editable-text="myTitle" edit-mode="isEditing"></h2>
+<h2 gg-editable-text="myTitle" gg-edit-mode="isEditing"></h2>
 
 <span ng-show="isEditing">The above h2 tag is being edited right now!</span> <!-- this will show only when the above component is in edit mode -->
 <label for="editControl">
@@ -137,13 +144,9 @@ if (isEditing) console.log('My title is being edited!');
 ```
 
 
-
-
-
-
 ## Configuration
 
-To use a different template for the "working.." that shows when a promise is waiting to be resolved, you can inject EditableTextHelperProvider to a config block as following (here I'm using a FontAwesome spinner instead):
+To use a different template when a promise is waiting to be resolved, you can inject EditableTextHelperProvider to a config block as following (here I'm using a FontAwesome spinner instead):
 ```
   .module('editableTextDemo', ['gg.editableText'])
     .config(function (EditableTextHelperProvider) {

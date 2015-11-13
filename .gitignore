@@ -2,4 +2,5 @@
 node_modules/
 coverage/
 .idea/
+.tmp/
 demo/bower_components
