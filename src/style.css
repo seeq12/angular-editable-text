@@ -21,7 +21,7 @@
 }
 
 .gg-editable-text textarea,.gg-editable-text input{
-  background: inherit;
+  background: transparent;
   color: inherit;
   font: inherit;
   border: inherit;
