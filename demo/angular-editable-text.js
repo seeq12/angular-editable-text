@@ -16,7 +16,6 @@
   'use strict';
   angular.module('gg.editableText').directive('ggEditableText', ggEditableText);
 
-  /* @ngInject */
   function ggEditableText($rootScope, $q, EditableTextHelper) {
     return {
       restrict: 'EA',
@@ -140,7 +139,6 @@
   'use strict';
   angular.module('gg.editableText').provider('EditableTextHelper', EditableTextHelper);
 
-  /* ngInject */
   function EditableTextHelper() {
 
     var workingText = '';
