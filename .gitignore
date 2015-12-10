@@ -3,4 +3,6 @@ node_modules/
 coverage/
 .idea/
 .tmp/
-demo/bower_components
+bower_components/
+demo/bower_components/
+npm-debug.log

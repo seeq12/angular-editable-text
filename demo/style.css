@@ -4,26 +4,17 @@
 .gg-editable-text:hover {
   border: 1px solid #666;
 }
-
-.gg-editable-text .original-text{
-  border: 1px solid #666;
-  text-decoration: inherit;
-  padding: 2px;
-}
-.gg-editable-text .original-text:hover {
-  border: 1px solid #666;
-}
 .gg-editable-text.editing {
   border: 1px solid #999;
 }
-.gg-editable-text input{
+.gg-editable-text input {
   border: 1px solid #ccc;
 }
-.gg-editable-text textarea:focus, .gg-editable-text input:focus{
+.gg-editable-text .gg-editable-text input:focus {
   outline: 0;
 }
 
-.gg-editable-text textarea,.gg-editable-text input{
+.gg-editable-text input {
   background: transparent;
   color: inherit;
   font: inherit;
@@ -41,6 +32,6 @@
   text-overflow: ellipsis;
 }
 
-.gg-editable-text span{
+.gg-editable-text span {
   text-decoration: inherit;
 }

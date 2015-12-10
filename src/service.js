@@ -5,6 +5,7 @@
   'use strict';
   angular.module('gg.editableText').provider('EditableTextHelper', EditableTextHelper);
 
+  /* ngInject */
   function EditableTextHelper() {
 
     var workingText = '';
