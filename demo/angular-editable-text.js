@@ -52,10 +52,6 @@
         scope.editingValue = newVal;
       });
 
-      $rootScope.$evalAsync(function() {
-        $(input[0]).width($(elem).width());
-      });
-
       scope.isEditing = !!scope.editMode;
       scope.editingValue = scope.editableText;
 
