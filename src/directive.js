@@ -18,8 +18,9 @@
       transclude: true,
       template:
         '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}" ng-style="{\'max-width\': \'inherit\'}" >' +
-          '<input ng-blur="onInputBlur()" ng-click="onInputClick()" ng-keydown="onKeyPress($event)" ng-model="editingValue" ' +
-            'placeholder="{{placeholder}}" type="text" pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="inherit" />' +
+          '<input ng-focus="onInputClick()" ng-click="onInputClick()" ng-blur="onInputBlur()" ng-keydown="onKeyPress($event)" ' +
+            'ng-model="editingValue" placeholder="{{placeholder}}" type="text" ' +
+            'pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="inherit" />' +
           '<span ng-hide="isEditing" ng-transclude></span>' +
           '<span ng-show="isWorking && EditableTextHelper.workingText.length" class="' + EditableTextHelper.workingClassName + '">' +
             EditableTextHelper.workingText + '</span>' +
