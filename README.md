@@ -58,11 +58,22 @@ Credit goes to @mmaday!
 
 ### Select All:
 
-To automatically select all text when entering edit mode, add the "select-all" attribute to the element.
+To automatically select all text when entering edit mode, add the "gg-select-all" attribute to the element.
 
 ```
 <h1 gg-editable-text="myText" gg-select-all>
 ```
+
+### Keep Focus on Enter:
+
+By default, hitting <i>Enter/Return</i> will call the on-change handler and blur the input field. To keep focus on
+the input field after enter, add the 'gg-keep-focus' attribute to the element.
+
+```
+<h1 gg-editable-text="myText" gg-keep-focus>
+```
+
+This only changes the behavior when hitting Enter.
 
 #### Validating processing, and server requests
 To validate content or perform a custom action, process it or send it to your server, you can pass a function as the

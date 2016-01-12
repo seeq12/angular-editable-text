@@ -18,7 +18,7 @@
       transclude: true,
       template:
         '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}" ng-style="{\'max-width\': \'inherit\'}" >' +
-          '<input ng-focus="onInputClick()" ng-click="onInputClick()" ng-blur="onInputBlur()" ng-keydown="onKeyPress($event)" ' +
+          '<input ng-focus="onInputFocus()" ng-click="onInputFocus()" ng-blur="onInputBlur()" ng-keydown="onKeyPress($event)" ' +
             'ng-model="editingValue" placeholder="{{placeholder}}" type="text" ' +
             'pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="inherit" />' +
           '<span ng-hide="isEditing" ng-transclude></span>' +
@@ -48,7 +48,7 @@
 
       elem.addClass('gg-editable-text');
 
-      scope.onInputClick = function() {
+      scope.onInputFocus = function() {
         scope.isEditing = true;
         wasClicked = true;
       };
@@ -64,9 +64,19 @@
 
       scope.onKeyPress = function(e) {
         var inputElem = input[0];
+
         if (e.which === 13) {
-          $(inputElem).blur();
+          // Enter/Return key
+          if (attrs.hasOwnProperty('ggKeepFocus')) {
+            // If keep-focus attribute set, process the change but don't blur
+            scope.onInputBlur();
+            onIsEditing(false);
+            onIsEditing(true);
+          } else {
+            $(inputElem).blur();
+          }
         } else if (e.which === 27) {
+          // Escape key
           scope.editingValue = scope.editableText;
           $(inputElem).blur();
         }
