@@ -72,11 +72,6 @@
        */
       scope.onInputBlur = function() {
         scope.isEditing = false;
-
-        // Kind of a hacky way, would be great to not have to do this
-        $rootScope.$evalAsync(function() {
-          $(input).width($(elem).width());
-        });
       };
 
       /**
