@@ -16,100 +16,109 @@
   'use strict';
   angular.module('gg.editableText').directive('ggEditableText', ggEditableText);
 
-  function ggEditableText($rootScope, $q, EditableTextHelper) {
+  function ggEditableText($rootScope, $q, $timeout, EditableTextHelper) {
     return {
       restrict: 'EA',
       scope: {
         editableText: '=ggEditableText',
-        editMode: '=ggIsEditing',
+        isEditing: '=ggIsEditing',
         placeholder: '@',
         onChange: '&ggOnChange'
       },
       transclude: true,
-      template:
-        '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}" ng-style="{\'max-width\': \'inherit\'}" >' +
-          '<input ng-focus="onInputFocus()" ng-click="onInputFocus()" ng-blur="onInputBlur()" ng-keydown="onKeyPress($event)" ' +
-            'ng-model="editingValue" placeholder="{{placeholder}}" type="text" ' +
-            'pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="inherit" />' +
-          '<span ng-hide="isEditing" ng-transclude></span>' +
-          '<span ng-show="isWorking && EditableTextHelper.workingText.length" class="' + EditableTextHelper.workingClassName + '">' +
-            EditableTextHelper.workingText + '</span>' +
+      template: '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}" ng-style="{\'max-width\': \'inherit\'}" >' +
+        '<input ng-focus="onInputFocus()" ng-click="onInputFocus()" ng-blur="onInputBlur()" ng-keydown="onKeyPress($event)" ' +
+          'ng-model="editingValue" placeholder="{{placeholder}}" type="text" ' +
+          'pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="inherit" />' +
+        '<span ng-hide="isEditing" ng-transclude></span>' +
+        '<span ng-show="isWorking && EditableTextHelper.workingText.length" class="' + EditableTextHelper.workingClassName + '">' +
+          EditableTextHelper.workingText + '</span>' +
         '</span>',
       link: link
     };
 
     function link(scope, elem, attrs) {
-      var input = elem.find('input');
-      var lastValue;
-      var wasClicked = false;
+      var input, lastValue;
 
-      scope.$watch('isEditing', onIsEditing);
-      scope.$watch('editMode', function(val) {
-        scope.isEditing = !!val;
-      });
+      activate();
 
-      scope.$watch('editableText', function(newVal) {
-        lastValue = newVal;
-        scope.editingValue = newVal;
-      });
+      /**
+       * Initialize the directive
+       */
+      function activate() {
+        elem.addClass('gg-editable-text');
 
-      scope.isEditing = !!scope.editMode;
-      scope.editingValue = scope.editableText;
+        input = elem.find('input')[0];
+        scope.editingValue = scope.editableText;
 
-      elem.addClass('gg-editable-text');
+        scope.$watch('isEditing', onIsEditing);
+        scope.$watch('editableText', function(newVal) {
+          lastValue = newVal;
+          scope.editingValue = newVal;
+          checkSelectAll();
+        });
+      }
 
+      /**
+       * Handler for 'focus' event from input field
+       */
       scope.onInputFocus = function() {
         scope.isEditing = true;
-        wasClicked = true;
+        checkSelectAll();
       };
 
+      /**
+       * Handler for 'blur' event from input field
+       */
       scope.onInputBlur = function() {
         scope.isEditing = false;
 
         // Kind of a hacky way, would be great to not have to do this
         $rootScope.$evalAsync(function() {
-          $(input[0]).width($(elem).width());
+          $(input).width($(elem).width());
         });
       };
 
+      /**
+       * Handler for 'keypress' event from input field
+       * @param {Object} e - $event for keypress event
+       */
       scope.onKeyPress = function(e) {
-        var inputElem = input[0];
-
         if (e.which === 13) {
           // Enter/Return key
+          $(input).blur();
+
+          // If keep-focus attribute set, call onInputFocus again after processing the change
           if (attrs.hasOwnProperty('ggKeepFocus')) {
-            // If keep-focus attribute set, process the change but don't blur
-            scope.onInputBlur();
-            onIsEditing(false);
-            onIsEditing(true);
-          } else {
-            $(inputElem).blur();
+            $timeout(scope.onInputFocus, 20);
           }
         } else if (e.which === 27) {
           // Escape key
           scope.editingValue = scope.editableText;
-          $(inputElem).blur();
+          $(input).blur();
         }
       };
 
-      function onIsEditing(isEditing, oldIsEditing) {
-        var inputElm = input[0];
-        if (!attrs.hasOwnProperty('ggEditMode')) {
-          scope.editMode = isEditing;
+      /**
+       * Select all text in input field if proper conditions exist
+       */
+      function checkSelectAll() {
+        if (scope.isEditing && attrs.hasOwnProperty('ggSelectAll')) {
+          input.setSelectionRange(0, scope.editingValue.length);
         }
+      }
 
+      /**
+       * Process changes in/out of edit mode, calling onChange handler when isEditing transitions to false
+       * @param {Boolean} isEditing - New value of isEditing
+       * @param {Boolean} oldIsEditing - Previous value of isEditing
+       */
+      function onIsEditing(isEditing, oldIsEditing) {
         elem[isEditing ? 'addClass' : 'removeClass']('editing');
         if (isEditing) {
-          inputElm.focus();
-          if (!wasClicked) {
-            inputElm.selectionStart = inputElm.selectionEnd = scope.editingValue ? scope.editingValue.length : 0;
-          }
 
-          wasClicked = false;
-
-          if (attrs.hasOwnProperty('ggSelectAll')) {
-            inputElm.select();
-          }
+          input.focus();
+          checkSelectAll();
 
         } else {
           if (attrs.hasOwnProperty('ggOnChange') && isEditing !== oldIsEditing && scope.editingValue !== lastValue) {
@@ -129,9 +138,11 @@
                 })
               .finally(function() {
                 scope.isWorking = false;
+                checkSelectAll();
               });
           } else {
             scope.editableText = scope.editingValue;
+            checkSelectAll();
           }
         }
       }

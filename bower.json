@@ -1,13 +1,11 @@
 {
   "name": "angular-editable-text",
-  "version": "2.0.0",
+  "version": "2.0.3",
   "appPath": "dist",
   "main": ["dist/angular-editable-text.js", "dist/angular-editable-text.css" ],
   "ignore": [
     "images/",
-    "javascripts/",
     "node_modules/",
-    "stylesheets/",
     "test/",
     "**/.*",
     "node_modules",
