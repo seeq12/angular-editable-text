@@ -1,6 +1,6 @@
 {
   "name": "angular-editable-text",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "appPath": "dist",
   "main": ["dist/angular-editable-text.js", "dist/angular-editable-text.css" ],
   "ignore": [
