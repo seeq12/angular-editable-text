@@ -19,7 +19,7 @@
       template: '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}" ng-style="{\'max-width\': \'inherit\'}" >' +
         '<input ng-focus="onInputFocus()" ng-blur="onInputBlur()" ng-keydown="onKeyPress($event)" ' +
           'ng-model="editingValue" placeholder="{{placeholder}}" type="text" ' +
-          'pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="inherit" />' +
+          'pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="100%" />' +
         '<span ng-hide="isEditing" ng-transclude></span>' +
         '<span ng-show="isWorking && EditableTextHelper.workingText.length" class="' + EditableTextHelper.workingClassName + '">' +
           EditableTextHelper.workingText + '</span>' +
