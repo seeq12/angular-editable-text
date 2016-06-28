@@ -26,12 +26,14 @@
         onChange: '&ggOnChange'
       },
       transclude: true,
-      // Updated template to allow ellipsis to work when displaying long names in IE
       template: '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}" ng-style="{\'max-width\': \'inherit\'}" >' +
         '<input ng-show="isEditing" ng-blur="onInputBlur()" ng-keydown="onKeyPress($event)" ' +
           'ng-model="editingValue" placeholder="{{placeholder}}" type="text" ' +
           'pu-elastic-input pu-elastic-input-minwidth="auto" pu-elastic-input-maxwidth="100%" />' +
         '<div ng-hide="isEditing" ng-click="onInputFocus()">{{editingValue}}</div>' +
+         '<span ng-hide="isEditing" ng-transclude></span>' +
+        '<span ng-show="isWorking && EditableTextHelper.workingText.length" class="' + EditableTextHelper.workingClassName + '">' +
+          EditableTextHelper.workingText + '</span>' +
         '</span>',
       link: link
     };
