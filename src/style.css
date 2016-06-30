@@ -29,7 +29,13 @@
   text-decoration: inherit;
   white-space: nowrap;
   overflow: hidden;
+  text-overflow: clip;
+}
+
+.gg-editable-text div {
   text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .gg-editable-text span {
