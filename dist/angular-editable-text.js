@@ -30,7 +30,7 @@
       template: '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}" ng-style="{\'max-width\': \'inherit\'}" >' +
         '<input ng-show="!showEllipsis || (isEditing && showEllipsis)" ng-focus="onInputFocus()" ng-blur="onInputBlur()" ng-keydown="onKeyPress($event)" ' +
           'ng-model="editingValue" placeholder="{{placeholder}}" type="text" ' +
-          'pu-elastic-input pu-elastic-input-minwidth="100%" pu-elastic-input-maxwidth="100%" />' +
+          'pu-elastic-input pu-elastic-input-minwidth="inherit" pu-elastic-input-maxwidth="100%" />' +
         '<div ng-show="!isEditing && showEllipsis" ng-click="onInputFocus()">{{editingValue}}</div>' +
         '<span ng-hide="isEditing" ng-transclude></span>' +
         '<span ng-show="isWorking && EditableTextHelper.workingText.length" class="' + EditableTextHelper.workingClassName + '">' +
@@ -66,7 +66,6 @@
        */
       scope.onInputFocus = function() {
         scope.isEditing = true;
-        checkSelectAll();
       };
 
       /**
