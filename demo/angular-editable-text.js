@@ -100,10 +100,10 @@
        */
       function checkSelectAll() {
         if (scope.isEditing && attrs.hasOwnProperty('ggSelectAll')) {
-          $timeout(function() {
+          scope.$applyAsync(function() {
             input.focus();
             input.setSelectionRange(0, scope.editingValue.length);
-          }, 1);
+          });
         }
       }
 
