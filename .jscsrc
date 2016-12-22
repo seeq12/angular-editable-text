@@ -1,11 +1,11 @@
 {
   "preset": "airbnb",
-  "esnext": false,
   "safeContextKeyword": ["vm", "_this", "that"],
   "disallowMultipleVarDecl": { "allExcept": ["undefined"] },
   "disallowSpacesInsideArrayBrackets": false,
   "disallowQuotedKeysInObjects": false,
   "requireTrailingComma": false,
+  "maximumLineLength": { "value": 140 },
   "disallowTrailingComma": true,
   "requireAlignedMultilineParams": true,
   "validateLineBreaks": null
