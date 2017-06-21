@@ -44,5 +44,26 @@
   },
   "scripts": {
     "test": "grunt test"
-  }
+  },
+  "description": "angular-editable-text ===================",
+  "main": "./dist/angular-editable-text.js",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seeq12/angular-editable-text.git"
+  },
+  "keywords": [
+    "angular",
+    "content editable",
+    "contenteditable",
+    "directive"
+  ],
+  "author": "Jason Rust <rustyparts@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/seeq12/angular-editable-text/issues"
+  },
+  "homepage": "https://github.com/seeq12/angular-editable-text#readme"
 }
