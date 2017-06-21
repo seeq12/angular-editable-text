@@ -14,9 +14,9 @@ Before creating this, I researched other libraries that seem to be fit for the j
 
 
 ## Installation:
-1. install using bower (or by getting the min.js and min.css files from dist library)
+1. install using npm (or by getting the min.js and min.css files from dist library)
     ```
-    $ bower install angular-editable-text
+    $ npm install angular-editable-text
     ```
 2. include angular-editable-text.min.js & angular.editable-text.min.css in your project
 3. include the module as a dependency of your app.
