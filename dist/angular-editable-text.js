@@ -2,7 +2,7 @@
  * Based on gg.editableText, originally created by Gabriel Grinberg on 6/13/14.
  */
 
-(function() {
+(function () {
   'use strict';
   angular.module('gg.editableText', ['puElasticInput']);
 
@@ -24,6 +24,7 @@
         isEditing: '=ggIsEditing',
         showEllipsis: '=ggShowEllipsis',
         placeholder: '@',
+        autocomplete: '@',
         onChange: '&ggOnChange'
       },
       transclude: true,
@@ -31,7 +32,7 @@
         '<span ng-class="{\'is-placeholder\': placeholder && !editingValue}" ng-style="{\'max-width\': \'inherit\'}" >' +
           '<input class="no-animate" ng-show="!showEllipsis || (isEditing && showEllipsis)" ng-focus="onInputFocus()" ' +
             'ng-blur="onInputBlur()" ng-keydown="onKeyPress($event)" ' +
-            'ng-model="editingValue" placeholder="{{placeholder}}" type="text" ' +
+            'ng-model="editingValue" autocomplete="{{autocomplete}}" placeholder="{{placeholder}}" type="text" ' +
             'pu-elastic-input pu-elastic-input-minwidth="inherit" pu-elastic-input-maxwidth="100%" />' +
           '<div class="no-animate" ng-show="!isEditing && showEllipsis" ng-click="onInputFocus()">{{editingValue}}</div>' +
           '<span class="no-animate" ng-hide="isEditing" ng-transclude></span>' +
@@ -155,7 +156,7 @@
 /**
  * Based on gg.editableText, originally created by Gabriel Grinberg on 6/13/14.
  */
-(function() {
+(function () {
   'use strict';
   angular.module('gg.editableText').provider('EditableTextHelper', EditableTextHelper);
 
@@ -164,17 +165,17 @@
     var workingText = '';
     var workingClassName = '';
 
-    this.setWorkingText = function(text) {
+    this.setWorkingText = function (text) {
       workingText = text;
       return this;
     };
 
-    this.setWorkingClassName = function(name) {
+    this.setWorkingClassName = function (name) {
       workingClassName = name;
       return this;
     };
 
-    this.$get = function() {
+    this.$get = function () {
       return {
         workingText: workingText,
         workingClassName: workingClassName
