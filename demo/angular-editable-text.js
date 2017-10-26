@@ -2,7 +2,7 @@
  * Based on gg.editableText, originally created by Gabriel Grinberg on 6/13/14.
  */
 
-(function () {
+(function() {
   'use strict';
   angular.module('gg.editableText', ['puElasticInput']);
 
@@ -25,7 +25,8 @@
         showEllipsis: '=ggShowEllipsis',
         placeholder: '@',
         autocomplete: '@',
-        onChange: '&ggOnChange'
+        onChange: '&ggOnChange',
+        onBlur: '&ggOnBlur'
       },
       transclude: true,
       template:
@@ -77,6 +78,10 @@
        */
       scope.onInputBlur = function () {
         scope.isEditing = false;
+
+        if(attrs.hasOwnProperty('ggOnBlur')) {
+          scope.onBlur();
+        }
       };
 
       /**
@@ -156,7 +161,7 @@
 /**
  * Based on gg.editableText, originally created by Gabriel Grinberg on 6/13/14.
  */
-(function () {
+(function() {
   'use strict';
   angular.module('gg.editableText').provider('EditableTextHelper', EditableTextHelper);
 
@@ -165,17 +170,17 @@
     var workingText = '';
     var workingClassName = '';
 
-    this.setWorkingText = function (text) {
+    this.setWorkingText = function(text) {
       workingText = text;
       return this;
     };
 
-    this.setWorkingClassName = function (name) {
+    this.setWorkingClassName = function(name) {
       workingClassName = name;
       return this;
     };
 
-    this.$get = function () {
+    this.$get = function() {
       return {
         workingText: workingText,
         workingClassName: workingClassName
