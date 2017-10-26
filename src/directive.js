@@ -15,7 +15,8 @@
         showEllipsis: '=ggShowEllipsis',
         placeholder: '@',
         autocomplete: '@',
-        onChange: '&ggOnChange'
+        onChange: '&ggOnChange',
+        onBlur: '&ggOnBlur'
       },
       transclude: true,
       template:
@@ -67,6 +68,10 @@
        */
       scope.onInputBlur = function () {
         scope.isEditing = false;
+
+        if(attrs.hasOwnProperty('ggOnBlur')) {
+          scope.onBlur();
+        }
       };
 
       /**
